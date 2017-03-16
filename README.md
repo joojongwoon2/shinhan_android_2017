@@ -1,1 +1,3 @@
-# shinhan_android_2017
+# 2017 신한 디지털 모바일 
+* 주종운
+* android
