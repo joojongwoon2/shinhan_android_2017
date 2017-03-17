@@ -9,27 +9,27 @@
     tools:context="com.shinhan.phonefindhelper.MainActivity">
 
     <Button
-        android:id="@+id/info"
+        android:id="@+id/buttonInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="기본 정보"
         android:textSize="80sp"
-        android:onClick="infoClicked"/>
+        android:onClick="onButtonInfoClicked"/>
 
     <Button
-        android:id="@+id/registlost"
+        android:id="@+id/buttonLost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="분실 등록"
         android:textSize="80sp"
-        android:onClick="registlostClicked"/>
+        android:onClick="onButtonLostClicked"/>
 
     <Button
-        android:id="@+id/confirmationlocation"
+        android:id="@+id/buttonLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="위치 확인"
         android:textSize="80sp"
-        android:onClick="confirmationlocationClicked"/>
+        android:onClick="onButtonLocationClicked"/>
 
 </LinearLayout>

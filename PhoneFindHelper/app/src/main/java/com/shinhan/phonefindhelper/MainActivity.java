@@ -13,17 +13,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void infoClicked(View view){
+    public void onButtonInfoClicked(View view){
         Intent updateIndent = new Intent(MainActivity.this, UpdateInfoActivity.class);
         startActivity(updateIndent);
     }
 
-    public void registlostClicked(View view){
+    public void onButtonLostClicked(View view){
         Intent registIndent = new Intent(MainActivity.this, RegistLostActivity.class);
         startActivity(registIndent);
     }
 
-    public void confirmationlocationClicked(View view){
+    public void onButtonLocationClicked(View view){
         Intent lockIndent = new Intent(MainActivity.this, ConfirmationLocationActivity.class);
         startActivity(lockIndent);
     }

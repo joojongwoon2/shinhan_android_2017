@@ -19,7 +19,12 @@
         <activity android:name=".UpdateInfoActivity" />
         <activity android:name=".RegistLostActivity" />
         <activity android:name=".ConfirmationLocationActivity" />
-        <activity android:name=".LockActivity"></activity>
+        <activity android:name=".LockActivity" />
+
+        <receiver
+            android:name=".LockReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>
