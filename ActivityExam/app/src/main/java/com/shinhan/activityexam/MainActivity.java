@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     public void onButtonClicked(View view){
         EditText edittext = (EditText)findViewById(R.id.edittext);
         String string = edittext.getText().toString();
-        //Toast.makeText(MainActivity.this, "클릭", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, "클릭!!!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivity.this, SubActivity.class);
         intent.putExtra("String", string);
         //startActivity(intent);
