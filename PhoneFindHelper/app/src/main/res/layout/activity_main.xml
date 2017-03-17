@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.shinhan.phonefindhelper.MainActivity">
+
+    <Button
+        android:id="@+id/info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="기본 정보"
+        android:textSize="80sp"
+        android:onClick="infoClicked"/>
+
+    <Button
+        android:id="@+id/registlost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="분실 등록"
+        android:textSize="80sp"
+        android:onClick="registlostClicked"/>
+
+    <Button
+        android:id="@+id/confirmationlocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="위치 확인"
+        android:textSize="80sp"
+        android:onClick="confirmationlocationClicked"/>
+
+</LinearLayout>
