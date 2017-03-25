@@ -14,6 +14,8 @@
     <uses-feature android:glEsVersion="0x00020000"
         android:required="true"/>
 
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
@@ -33,17 +35,26 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UpdateInfoActivity" />
-        <activity android:name=".RegistLostActivity" />
-        <activity android:name=".ConfirmationLocationActivity" />
-        <activity android:name=".LockActivity" />
+        <activity android:name=".UpdateInfoActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".RegistLostActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".ConfirmationLocationActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".LockActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
 
         <receiver
             android:name=".LockReceiver"

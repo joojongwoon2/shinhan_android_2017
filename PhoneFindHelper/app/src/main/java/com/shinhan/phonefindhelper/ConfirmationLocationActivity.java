@@ -3,7 +3,10 @@ package com.shinhan.phonefindhelper;
 import android.*;
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,7 +15,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,10 +32,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
+
 public class ConfirmationLocationActivity extends AppCompatActivity {
 
     SupportMapFragment mapFragment;
     GoogleMap map;
+
+    ArrayList<String> arraylist;
+
+    String x = "";
+    String y = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +54,6 @@ public class ConfirmationLocationActivity extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 map = googleMap;//비동기방식으로 구글지도 객체 얻기
-
-                MarkerOptions marker = new MarkerOptions();
-                marker.position(new LatLng(37.526319,  126.864322 ));
-                marker.title("핸드폰 위치");
-
-                map.addMarker(marker);
-                map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker marker) {
-                        map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 15));
-                        return false;
-                    }
-                });
 
             }
         });
@@ -69,6 +68,35 @@ public class ConfirmationLocationActivity extends AppCompatActivity {
             }
         }
 
+        arraylist = new ArrayList<String>();
+
+        Log.i("LocationActivity", "onCreate 실행");
+        try {
+            PhoneDB db = new PhoneDB(ConfirmationLocationActivity.this);
+            SQLiteDatabase databaseRead = db.getReadableDatabase();
+            Cursor cursor = databaseRead.rawQuery("select * from " + PhoneDB.TABLE_NAME_PHONELIST, null);
+            Log.i("LocationActivity", cursor.getCount() + "");
+
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.moveToNext();
+                arraylist.add(cursor.getString(0));
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, arraylist);
+        //스피너 속성
+        Spinner sp = (Spinner) this.findViewById(R.id.spinner);
+        sp.setPrompt("골라봐"); // 스피너 제목
+        sp.setAdapter(adapter);
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
 
     public void onRequestPermissionsResult(int requestCode, String permission[], int[] grantResults){
@@ -121,6 +149,63 @@ public class ConfirmationLocationActivity extends AppCompatActivity {
 
             GPSListener gpsListener = new GPSListener();
             manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, gpsListener);
+        }
+    }
+
+    public void onButtonLocationClicked(View view){
+        try {
+            Spinner sp = (Spinner) this.findViewById(R.id.spinner);
+
+            if(sp.getSelectedItem() == null){
+                Toast.makeText(ConfirmationLocationActivity.this, "선택한 전화번호가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }else {
+                Log.i("선택된 전화번호", sp.getSelectedItem().toString() + "");
+            }
+
+            PhoneDB db = new PhoneDB(ConfirmationLocationActivity.this);
+            SQLiteDatabase databaseRead = db.getReadableDatabase();
+            Cursor cursor = databaseRead.rawQuery("select * from " + PhoneDB.TABLE_NAME_PHONELIST + " WHERE phoneNumber = '" + sp.getSelectedItem().toString()  + "'", null);
+            Log.i("LocationActivity", cursor.getCount() + "");
+
+            if (cursor.getCount() == 1) {
+                cursor.moveToFirst();
+                Log.i("선택된 전화기 위치 x", cursor.getString(1));
+                Log.i("선택된 전화기 위치 y", cursor.getString(2));
+
+                /*String strX = "";
+                String strY = "";
+                if( cursor.getString(1).indexOf(".") >= 0 ) {
+                    if( cursor.getString(1).substring(cursor.getString(1).indexOf(".") + 1).length() > 5 ){
+                        strX = cursor.getString(1).substring(0, cursor.getString(1).indexOf(".") + 1) + cursor.getString(1).substring(cursor.getString(1).indexOf(".") + 1).substring(0, 5);
+                    }
+                }
+
+                if( cursor.getString(2).indexOf(".") >= 0 ) {
+                    if( cursor.getString(2).substring(cursor.getString(2).indexOf(".") + 1).length() > 5 ){
+                        strY = cursor.getString(2).substring(0, cursor.getString(2).indexOf(".") + 1) + cursor.getString(2).substring(cursor.getString(2).indexOf(".") + 1).substring(0, 5);
+                    }
+                }
+
+                Log.i("선택된 전화기 위치 x", strX);
+                Log.i("선택된 전화기 위치 y", strY);*/
+
+                double doubleX = Double.parseDouble(cursor.getString(1));
+                double doubleY = Double.parseDouble(cursor.getString(2));
+
+                LatLng curPoint = new LatLng(doubleX, doubleY);
+                if(map != null){
+                    MarkerOptions marker = new MarkerOptions();
+                    marker.position(new LatLng(doubleX,  doubleY ));
+                    marker.title(sp.getSelectedItem().toString() + "핸드폰 위치");
+
+                    map.addMarker(marker);
+
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(curPoint, 15));
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 }

@@ -10,40 +10,53 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="10"
         android:text="분실 등록"
         android:layout_gravity="center"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <Button
+        android:layout_height="0dp"
+        android:layout_weight="10">
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"/>
+        <Button
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="5"
+        android:layout_weight="25"
         android:text="잠금등록"
-        android:onClick="onLockButtonClicked"/>
-    <Button
+        android:onClick="onButtonLockClicked"/>
+        <Button
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="5"
+        android:layout_weight="25"
         android:text="잠금해제"
-        android:onClick="onUnlockButtonClicked"/>
+        android:onClick="onButtonUnLockClicked"/>
     </LinearLayout>
     <ListView
+        android:id="@+id/listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="0dp"
+        android:layout_weight="70"
+        android:background="@drawable/security"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="10">
     <EditText
+        android:id="@+id/textContents"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="8"
+        android:layout_weight="80"
         android:hint="메시지를 입력 하세요."/>
     <Button
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
+        android:layout_weight="20"
+        android:onClick="onButtonSend"
         android:text="전송"/>
     </LinearLayout>
 

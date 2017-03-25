@@ -8,10 +8,17 @@
     android:orientation="vertical"
     tools:context="com.shinhan.phonefindhelper.MainActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="40"
+        android:src="@drawable/security"/>
+
     <Button
         android:id="@+id/buttonInfo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="20"
         android:text="기본 정보"
         android:textSize="80sp"
         android:onClick="onButtonInfoClicked"/>
@@ -19,7 +26,8 @@
     <Button
         android:id="@+id/buttonLost"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="20"
         android:text="분실 등록"
         android:textSize="80sp"
         android:onClick="onButtonLostClicked"/>
@@ -27,7 +35,8 @@
     <Button
         android:id="@+id/buttonLocation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="20"
         android:text="위치 확인"
         android:textSize="80sp"
         android:onClick="onButtonLocationClicked"/>
