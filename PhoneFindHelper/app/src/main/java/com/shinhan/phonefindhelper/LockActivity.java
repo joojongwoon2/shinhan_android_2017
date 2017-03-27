@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +36,7 @@ public class LockActivity extends AppCompatActivity {
 
     public Vector msgVector  = new Vector();
     String passwordStr = "";
+    //SoundPool mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +48,12 @@ public class LockActivity extends AppCompatActivity {
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 
-
+        /*int soundId = mSoundPool.load(LockActivity.this, R.raw.beep, 1);
+        try {
+            Thread.sleep(100);
+        }catch(Exception exception){
+            exception.printStackTrace();
+        }*/
 
         Log.i("LockActivity", "onCreate 실행");
         try {
@@ -72,6 +81,12 @@ public class LockActivity extends AppCompatActivity {
         }catch(Exception e){
             e.printStackTrace();
         }
+
+        /*try{//분실폰에서 잠금상태 메시지 수신 받으면 경고음
+            mSoundPool.play(soundId, 1, 1, 0, 0, 1);
+        }catch(Exception exc){
+            exc.printStackTrace();
+        }*/
 
         //HomeKeyLocker homeKeyLoader = new HomeKeyLocker();
         //homeKeyLoader.lock(this);
@@ -185,12 +200,23 @@ public class LockActivity extends AppCompatActivity {
         ArrayAdapter<String> adaptor = new ArrayAdapter<String>(LockActivity.this, android.R.layout.simple_list_item_1, msgVector);
         ListView listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(adaptor);
+        listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        listView.setSelection(adaptor.getCount() - 1);
     }
 
     public void onButtonLogin(View view){
         EditText editText = (EditText) findViewById(R.id.textId);
 
         if( editText.getText().toString().trim().equals(passwordStr) ) {//로그인 OK
+
+            try {
+                PhoneDB db = new PhoneDB(LockActivity.this);
+                SQLiteDatabase databaseWrite = db.getWritableDatabase();//쓰기모드로 열기
+                databaseWrite.execSQL("UPDATE " + PhoneDB.TABLE_NAME_MYINFO + " SET lock = '0' WHERE id = '0';");//1 잠금, 0 해제
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
             finish();
         }else{
             Toast.makeText(LockActivity.this, "비밀번호가 틀립니다.", Toast.LENGTH_SHORT).show();

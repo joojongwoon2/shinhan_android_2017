@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -49,7 +51,7 @@ public class LockReceiver extends BroadcastReceiver {
             //if( sender.trim().equals(phoneNumber.trim()) ) {//메시지를 보낸 전화번호가 등록된 번호와 같으면
 
             String contentsStr = "";
-            if(contents.trim().startsWith("|SMS|")) {
+            if(contents.trim().startsWith("|SMS|")) {//잠금 LOCK화면에서 메시지 전송 시 수신받는 부분
                 contentsStr = contents.trim().substring(5);
                 Log.i(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>|SMS|" + contentsStr);
 
@@ -61,7 +63,7 @@ public class LockReceiver extends BroadcastReceiver {
                 showIntent.putExtra("sender", sender.trim());
                 showIntent.putExtra("contents", contentsStr.trim());
                 context.startActivity(showIntent);
-            }else if(contents.trim().startsWith("|SMSLOCK|")) {
+            }else if(contents.trim().startsWith("|SMSLOCK|")) {//잠금등록 화면에서 메시지 전송 시 수신받는 부분
                 contentsStr = contents.trim().substring(9);
                 Log.i(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>|SMSLOCK|" + contentsStr);
 
@@ -73,15 +75,22 @@ public class LockReceiver extends BroadcastReceiver {
                 showIntent.putExtra("sender", sender.trim());
                 showIntent.putExtra("contents", contentsStr.trim());
                 context.startActivity(showIntent);
-            }else if (contents.trim().startsWith("|LOCK|")) {
+            }else if (contents.trim().startsWith("|LOCK|")) {//잠금등록 화면에서 잠금등록 버튼 클릭으로 전송 시 수신받는 부분
                 contentsStr = contents.trim().substring(6);
                 Log.i(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>|LOCK|" + contentsStr);
 
                 try {
                     SQLiteDatabase databaseWrite = phoneDB.getWritableDatabase();//쓰기모드로 열기
-                    databaseWrite.execSQL("UPDATE " + PhoneDB.TABLE_NAME_MYINFO + " SET lock = '1' WHERE id = '0';");
+                    databaseWrite.execSQL("UPDATE " + PhoneDB.TABLE_NAME_MYINFO + " SET lock = '1' WHERE id = '0';");//1 잠금, 0 해제
                 }catch(Exception e){
                     e.printStackTrace();
+                }
+
+                try{
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(sender, null, "|SMS|분실폰 잠금설정 됬습니다.", null, null);
+                }catch(Exception ex){
+                    ex.printStackTrace();
                 }
 
                 Intent showIntent = new Intent(context, LockActivity.class);
@@ -92,15 +101,22 @@ public class LockReceiver extends BroadcastReceiver {
                 showIntent.putExtra("sender", sender.trim());
                 showIntent.putExtra("contents", contentsStr.trim());
                 context.startActivity(showIntent);
-            } else if (contents.trim().startsWith("|UNLOCK|")) {
+            } else if (contents.trim().startsWith("|UNLOCK|")) {//잠금등록 화면에서 잠금해제 버튼 클릭으로 전송 시 수신받는 부분
                 contentsStr = contents.trim().substring(8);
                 Log.i(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>|UNLOCK|" + contentsStr);
 
                 try {
                     SQLiteDatabase databaseWrite = phoneDB.getWritableDatabase();//쓰기모드로 열기
-                    databaseWrite.execSQL("UPDATE " + PhoneDB.TABLE_NAME_MYINFO + " SET lock = '0' WHERE id = '0';");
+                    databaseWrite.execSQL("UPDATE " + PhoneDB.TABLE_NAME_MYINFO + " SET lock = '0' WHERE id = '0';");//1 잠금, 0 해제
                 }catch(Exception e){
                     e.printStackTrace();
+                }
+
+                try{
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(sender, null, "|SMS|분실폰 잠금해제 됬습니다.", null, null);
+                }catch(Exception ex){
+                    ex.printStackTrace();
                 }
 
                 Intent showIntent = new Intent(context, LockActivity.class);
@@ -111,7 +127,7 @@ public class LockReceiver extends BroadcastReceiver {
                 showIntent.putExtra("sender", sender.trim());
                 showIntent.putExtra("contents", contentsStr.trim());
                 context.startActivity(showIntent);
-            } else if (contents.trim().startsWith("|REG|")) {
+            } else if (contents.trim().startsWith("|REG|")) {//기본정보 등록화면에서 등록버튼 클릭으로 전송 시 수신받는 부분
                 contentsStr = contents.trim().substring(5);
                 Log.i(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>|REG|" + contentsStr);
                 //상대방 기본정보 등록 시 ...
@@ -140,7 +156,7 @@ public class LockReceiver extends BroadcastReceiver {
                     }
                     e.printStackTrace();
                 }
-            } else if (contents.trim().startsWith("|GPS|")) {
+            } else if (contents.trim().startsWith("|GPS|")) {//분실폰에서 잠금 LOCK화면 Open 시점에 GPS정보 전송시 수신받는 부분
                 contentsStr = contents.trim().substring(5);
                 Log.i(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>|GPS|" + contentsStr);
                 //상대방 GPS 등록 시 ...

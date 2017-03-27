@@ -112,6 +112,10 @@ public class RegistLostActivity extends AppCompatActivity {
         ArrayAdapter<String> adaptor = new ArrayAdapter<String>(RegistLostActivity.this, android.R.layout.simple_list_item_1, msgVector);
         ListView listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(adaptor);
+
+        listView.setAdapter(adaptor);
+        listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        listView.setSelection(adaptor.getCount() - 1);
     }
 
     public void onButtonLockClicked(View view){
