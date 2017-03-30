@@ -32,22 +32,23 @@ public class LockReceiver extends BroadcastReceiver {
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(context.TELEPHONY_SERVICE);
             String myPhoneNumber = telephonyManager.getLine1Number();
 
-            String phoneNumber = "";
             PhoneDB phoneDB = new PhoneDB(context);
+            String fixedPhoneNumber = "";
             try {
-                SQLiteDatabase databaseRead = phoneDB.getReadableDatabase();
-                Cursor cursor = databaseRead.rawQuery("select * from " + PhoneDB.TABLE_NAME_PHONELIST, null);
-                Log.i("LockReceiver count--", cursor.getCount() + "");
+                SQLiteDatabase database = phoneDB.getReadableDatabase();
+                Cursor cursor = database.rawQuery("select * from " + PhoneDB.TABLE_NAME_MYINFO, null);
+                Log.i(TAG, cursor.getCount() + "");
 
-                for (int i = 0; i < cursor.getCount(); i++) {//01011112222|01022223333|
-                    cursor.moveToNext();
-                    phoneNumber += cursor.getString(0) + "|";
+                if (cursor.getCount() == 1) {
+                    cursor.moveToFirst();
+                    fixedPhoneNumber = cursor.getString(1).trim();
+                    Log.i("fixedPhoneNumber", fixedPhoneNumber);
                 }
             }catch(Exception e){
                 e.printStackTrace();
             }
 
-            Log.i(TAG, "myPhoneNumber:" + myPhoneNumber + ", sender:" + sender + ", contents:" + contents + ", phoneNumber:" + phoneNumber);
+            Log.i(TAG, "myPhoneNumber:" + myPhoneNumber + ", sender:" + sender + ", contents:" + contents + ", fixedPhoneNumber:" + fixedPhoneNumber);
             //if( sender.trim().equals(phoneNumber.trim()) ) {//메시지를 보낸 전화번호가 등록된 번호와 같으면
 
             String contentsStr = "";
@@ -75,9 +76,9 @@ public class LockReceiver extends BroadcastReceiver {
                 showIntent.putExtra("sender", sender.trim());
                 showIntent.putExtra("contents", contentsStr.trim());
                 context.startActivity(showIntent);
-            }else if (contents.trim().startsWith("|LOCK|")) {//잠금등록 화면에서 잠금등록 버튼 클릭으로 전송 시 수신받는 부분
+            }else if (contents.trim().startsWith("|LOCK|") && fixedPhoneNumber.equals(sender.trim())) {//잠금등록 화면에서 잠금등록 버튼 클릭으로 전송 시 수신받는 부분
                 contentsStr = contents.trim().substring(6);
-                Log.i(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>|LOCK|" + contentsStr);
+                Log.i(TAG, "번호동일>>>>>>>>>>>>>>>>>>>>>>>>>>>>|LOCK|" + contentsStr);
 
                 try {
                     SQLiteDatabase databaseWrite = phoneDB.getWritableDatabase();//쓰기모드로 열기

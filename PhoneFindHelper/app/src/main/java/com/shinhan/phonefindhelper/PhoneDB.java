@@ -13,7 +13,7 @@ import static android.R.attr.version;
 
 public class PhoneDB extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "phone.db";
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 8;
     public static final String TABLE_NAME_MYINFO = "myInfo";
     public static final String TABLE_NAME_PHONELIST = "phoneList";
 

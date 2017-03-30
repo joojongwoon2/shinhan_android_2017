@@ -47,8 +47,7 @@
             android:id="@+id/listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/security"
-            android:alpha="50"/>
+            android:background="@drawable/lock"/>
     </LinearLayout>
 
     <LinearLayout
